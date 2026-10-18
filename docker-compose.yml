@@ -1,0 +1,21 @@
+# Agent-2's database on its own (for development or a quick look):
+#   copy .env.example .env      (set POSTGRES_PASSWORD)
+#   docker compose up -d
+# then connect to localhost:5435, database agent_2_db, user postgres.
+# In the full deployment, kqml-deploy builds this repository as service db2
+# instead, with no open port.
+services:
+  db:
+    build: .
+    image: kqml-db2
+    container_name: agent-2-postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports:
+      - "${DB_PORT:-5435}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+volumes:
+  pgdata:
